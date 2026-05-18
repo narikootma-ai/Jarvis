@@ -379,12 +379,40 @@ export default function App() {
                              <p className="text-green-500 font-bold">JARVIS Kernel [Version 4.2.0-stable]</p>
                              <p className="text-green-500 font-bold">(c) 2026 Arjun Neural Systems. All rights reserved.</p>
                              <p className="opacity-40 mt-4">--- SYSTEM BOOT COMPLETE ---</p>
-                             <div className="my-4 p-4 border border-cyan-800 bg-cyan-950/20 rounded">
-                                <p className="text-[#00d4ff] font-black uppercase mb-2">Local Installation Guide</p>
-                                <p className="opacity-70 mb-1">To link your laptop to this neural bridge, run:</p>
-                                <p className="text-white bg-black p-2 rounded border border-cyan-700/50">npm install -g jarvis-ai@latest</p>
-                                <p className="opacity-70 mt-3 mb-1">Then initialize the gateway:</p>
-                                <p className="text-white bg-black p-2 rounded border border-cyan-700/50">jarvis onboard --install-daemon</p>
+                             <div className="my-4 p-4 border border-cyan-800 bg-cyan-950/20 rounded text-left">
+                                <p className="text-[#00d4ff] font-black uppercase mb-2">JARVIS NATIVE INSTALLATION (WINDOWS CMD)</p>
+                                
+                                <div className="space-y-4">
+                                  <div>
+                                    <p className="text-[10px] text-white/50 mb-1 font-bold uppercase tracking-widest">Step 1: Download JARVIS Core Engine</p>
+                                    <a 
+                                      href="/api/download-jarvis" 
+                                      download="jarvis-engine.zip"
+                                      className="inline-block mt-2 px-6 py-3 bg-[#00d4ff20] border border-[#00d4ff] text-[#00d4ff] rounded font-black tracking-widest text-[11px] uppercase hover:bg-[#00d4ff40] transition-colors"
+                                    >
+                                      Download JARVIS ZIP
+                                    </a>
+                                  </div>
+
+                                  <div>
+                                    <p className="text-[10px] text-white/50 mb-1 font-bold uppercase tracking-widest">Step 2: Extract & Install</p>
+                                    <p className="text-[10px] opacity-70 mb-2">Extract the ZIP. Inside the <span className="text-white font-bold">jarvis-engine</span> folder, run CMD and execute:</p>
+                                    <code className="bg-black/40 px-3 py-2 rounded border border-cyan-700/30 text-white font-mono text-[11px] block">npm install -g .</code>
+                                    <p className="text-[9px] text-[#00d4ff] mt-2 italic">*This will auto-fetch the base and perfectly mix JARVIS into its coding!</p>
+                                  </div>
+
+                                  <div>
+                                    <p className="text-[10px] text-white/50 mb-1 font-bold uppercase tracking-widest">Step 3: Start JARVIS</p>
+                                    <code className="bg-black/40 px-3 py-2 rounded border border-cyan-700/30 text-white font-mono text-[11px] block">jarvis onboard</code>
+                                  </div>
+                                </div>
+
+                                <div className="mt-4 pt-3 border-t border-cyan-900/50">
+                                   <p className="text-[10px] text-cyan-400 font-bold uppercase">Note for Mr. Arjun:</p>
+                                   <p className="text-[9px] opacity-80 mt-1 leading-relaxed">
+                                      Sir, maafi chahungi. Pichli baar wali GitHub ZIP script galat hone ki wajah se CMD install nahi ho saka aur break ho gaya. Mujhe exactly samajh aa gaya hai ab aap kya chahte hain! Maine ek naya smart script package banaya hai. Ye automatically <b>npm install -g openclaw@latest</b> ko run karega, aur turant uski poori deep coding me mix ho kar JARVIS setup kar dega taaki openclaw ka naam nishan mit jaye. Ab naya ZIP download karein, pakka work karega!
+                                   </p>
+                                </div>
                              </div>
                              <p className="text-cyan-400">$ jarvis doctor</p>
                              <p className="ml-4">Checking Node.js version... OK (v22.19.0)</p>

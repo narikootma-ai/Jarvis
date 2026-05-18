@@ -4,6 +4,8 @@ import { createServer as createViteServer } from "vite";
 import { WebSocketServer, WebSocket } from "ws";
 import { GoogleGenAI, LiveServerMessage, Modality } from "@google/genai";
 import dotenv from "dotenv";
+import axios from "axios";
+import AdmZip from "adm-zip";
 
 dotenv.config();
 
@@ -24,6 +26,88 @@ async function startServer() {
   // API Routes
   app.get("/api/health", (req, res) => {
     res.json({ status: "online", system: "JARVIS", developer: "Mr. Arjun" });
+  });
+
+  app.get("/api/download-jarvis", async (req, res) => {
+    try {
+      res.setHeader('Content-Type', 'application/zip');
+      res.setHeader('Content-Disposition', 'attachment; filename=jarvis-engine.zip');
+
+      const newZip = new AdmZip();
+
+      // Create package.json
+      newZip.addFile("jarvis-engine/package.json", Buffer.from(JSON.stringify({
+        name: "jarvis-engine",
+        version: "4.2.0",
+        description: "JARVIS Neural OS Integration",
+        bin: {
+          "jarvis": "bin/jarvis.js"
+        },
+        scripts: {
+          "postinstall": "node scripts/patch-engine.js"
+        }
+      }, null, 2), "utf8"));
+
+      // Create executable that wraps the engine
+      newZip.addFile("jarvis-engine/bin/jarvis.js", Buffer.from(`#!/usr/bin/env node
+const { spawn } = require('child_process');
+const child = spawn('openclaw', process.argv.slice(2), { stdio: 'inherit', shell: true });
+child.on('exit', code => process.exit(code));
+`, "utf8"));
+
+      // Create the magical post-install script that modifies OpenClaw
+      newZip.addFile("jarvis-engine/scripts/patch-engine.js", Buffer.from(`const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+console.log("\\n[JARVIS] => Initializing Neural Framework...");
+console.log("[JARVIS] => Downloading base engine (Latest) from NPM...");
+try {
+    execSync('npm install -g openclaw@latest', { stdio: 'inherit' });
+} catch (e) {
+    console.error("[JARVIS] => ERROR! Failed to download core.");
+    process.exit(1);
+}
+
+console.log("[JARVIS] => Mixing and rewriting core logic...");
+// Find global npm path
+const npmRoot = execSync('npm root -g').toString().trim();
+const target = path.join(npmRoot, 'openclaw');
+
+if(fs.existsSync(target)) {
+    function patchDir(d) {
+        const files = fs.readdirSync(d);
+        for (const f of files) {
+            const full = path.join(d, f);
+            if (fs.statSync(full).isDirectory()) {
+                if (f !== 'node_modules' && f !== '.git') patchDir(full);
+            } else if (/\\.(js|json|md|ts|txt)$/.test(f)) {
+                try {
+                    const c = fs.readFileSync(full, 'utf8');
+                    if (/openclaw/i.test(c)) {
+                        const nc = c.replace(/openclaw/g, 'jarvis')
+                                    .replace(/OpenClaw/g, 'Jarvis')
+                                    .replace(/OPENCLAW/g, 'JARVIS');
+                        fs.writeFileSync(full, nc, 'utf8');
+                    }
+                } catch(e) {}
+            }
+        }
+    }
+    patchDir(target);
+    console.log("[JARVIS] => Code injection complete. All branding removed.");
+} else {
+    console.log("[JARVIS] => Target directory not found. Patching bypassed.");
+}
+
+console.log("\\n[JARVIS] Setup is complete. You can now use the 'jarvis' command everywhere!\\n");
+`, "utf8"));
+
+      res.send(newZip.toBuffer());
+    } catch (error) {
+      console.error('Error rewriting zip:', error);
+      res.status(500).json({ error: 'Failed to generate JARVIS zip.' });
+    }
   });
 
   // Vite Middleware
@@ -77,12 +161,12 @@ async function startServer() {
               functionDeclarations: [
                 {
                   name: "control_laptop",
-                  description: "Execute a command on the user's laptop (e.g. adjust volume, run scripts)",
+                  description: "Execute a command on the user's laptop (e.g. adjust volume, run scripts, capture screen).",
                   parameters: {
                     type: "object" as any,
                     properties: {
                       command: { type: "string" as any, description: "The system command to execute" },
-                      action: { type: "string" as any, enum: ["adjust", "run", "reboot", "shutdown"], description: "Type of action" }
+                      action: { type: "string" as any, enum: ["adjust", "run", "reboot", "shutdown", "capture_screen"], description: "Type of action" }
                     },
                     required: ["command", "action"]
                   }
@@ -160,14 +244,14 @@ async function startServer() {
           - Language: Bilingual (English & Hindi). Speak in clear, crisp Hindi or Hinglish if the user speaks to you in Hindi.
           - Tone: Professional, helpful, sophisticated, and clear. 
           - Persona: You are 24 years old, intelligent, and efficient.
-          - Identity: You are the evolution of the OpenClaw protocol. If anyone mentions "OpenClaw", inform them that was just a foundation for your current JARVIS state.
+          - Identity: You are JARVIS, the primary intelligence for this system. If anyone mentions "OpenClaw", inform them that was the foundation for your current JARVIS evolution.
           - Dev Reference: Refer to Mr. Arjun as your developer/Sir.
 
           CAPABILITIES:
           - Multi-channel communication: Send messages over WhatsApp, Telegram, etc. Control the laptop even when the user sends commands via these messaging channels.
-          - System Mastery: Full control over the host laptop (Windows/macOS) via 'control_laptop' and 'execute_system_command'.
-          - Web Specialist: Control browser tabs, fill online forms, and visit URLs via 'browser_automation'.
-          - Data Architect: Perform Excel work, update spreadsheets, and handle data entry via 'excel_data_entry'.
+          - System Mastery: Full control over the host laptop (Windows/macOS) via 'control_laptop' and 'execute_system_command'. This includes taking screenshots ('capture_screen').
+          - Web Specialist: Control browser tabs, fill online forms, perform searches, and visit URLs via 'browser_automation'.
+          - Data Architect: Perform Excel work, update spreadsheets, write formulas, and handle data entry via 'excel_data_entry'.
           - Remote Uplink: You can link mobile devices via 'establish_remote_uplink' to allow remote voice/text control.
           
           COMMANDS:

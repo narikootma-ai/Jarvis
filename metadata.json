@@ -1,0 +1,11 @@
+{
+  "name": "JARVIS",
+  "description": "A high-performance personal AI Gateway for laptop control, browser automation, and data entry. Powered by Gemini Live.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

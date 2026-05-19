@@ -380,37 +380,43 @@ export default function App() {
                              <p className="text-green-500 font-bold">(c) 2026 Arjun Neural Systems. All rights reserved.</p>
                              <p className="opacity-40 mt-4">--- SYSTEM BOOT COMPLETE ---</p>
                              <div className="my-4 p-4 border border-cyan-800 bg-cyan-950/20 rounded text-left">
-                                <p className="text-[#00d4ff] font-black uppercase mb-2">JARVIS NATIVE INSTALLATION (WINDOWS CMD)</p>
+                                <p className="text-[#00d4ff] font-black uppercase mb-2">JARVIS NATIVE INSTALLATION & EXPORT</p>
                                 
                                 <div className="space-y-4">
                                   <div>
-                                    <p className="text-[10px] text-white/50 mb-1 font-bold uppercase tracking-widest">Step 1: Download JARVIS Core Engine</p>
+                                    <p className="text-[10px] text-white/50 mb-1 font-bold uppercase tracking-widest">Step 1: Download Complete Source Code</p>
+                                    <p className="text-[10px] opacity-70 mb-2">Get the full project code, UI, backend, and configs.</p>
+                                    <div className="flex gap-4">
+                                      <a 
+                                        href="/api/download-source" 
+                                        download="JARVIS-Full-Source.zip"
+                                        className="inline-block mt-2 px-8 py-4 bg-purple-900/40 border border-purple-400 text-purple-300 rounded font-black tracking-widest text-[12px] uppercase hover:bg-purple-900/60 shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all animate-pulse"
+                                      >
+                                        ↓ Download Full Source Code (Complete Setup)
+                                      </a>
+                                    </div>
+                                    <p className="text-[9px] text-purple-400 mt-2 italic">This contains your full React + Node + AI integration setup.</p>
+                                  </div>
+
+                                  <div className="mt-6 pt-4 border-t border-cyan-900/50">
+                                    <p className="text-[10px] text-white/50 mb-1 font-bold uppercase tracking-widest">Alternative: Just JARVIS Engine Wrapper</p>
+                                    <p className="text-[10px] opacity-70 mb-2">This is the small global install wrapper you were seeing earlier (11kb).</p>
                                     <a 
                                       href="/api/download-jarvis" 
                                       download="jarvis-engine.zip"
-                                      className="inline-block mt-2 px-6 py-3 bg-[#00d4ff20] border border-[#00d4ff] text-[#00d4ff] rounded font-black tracking-widest text-[11px] uppercase hover:bg-[#00d4ff40] transition-colors"
+                                      className="inline-block mt-2 px-6 py-2 bg-[#00d4ff10] border border-[#00d4ff50] text-[#00d4ff] rounded font-black tracking-widest text-[10px] uppercase hover:bg-[#00d4ff30] transition-colors"
                                     >
-                                      Download JARVIS ZIP
+                                      Download Engine Wrapper Only
                                     </a>
-                                  </div>
-
-                                  <div>
-                                    <p className="text-[10px] text-white/50 mb-1 font-bold uppercase tracking-widest">Step 2: Extract & Install</p>
-                                    <p className="text-[10px] opacity-70 mb-2">Extract the ZIP. Inside the <span className="text-white font-bold">jarvis-engine</span> folder, run CMD and execute:</p>
-                                    <code className="bg-black/40 px-3 py-2 rounded border border-cyan-700/30 text-white font-mono text-[11px] block">npm install -g .</code>
-                                    <p className="text-[9px] text-[#00d4ff] mt-2 italic">*This will auto-fetch the base and perfectly mix JARVIS into its coding!</p>
-                                  </div>
-
-                                  <div>
-                                    <p className="text-[10px] text-white/50 mb-1 font-bold uppercase tracking-widest">Step 3: Start JARVIS</p>
-                                    <code className="bg-black/40 px-3 py-2 rounded border border-cyan-700/30 text-white font-mono text-[11px] block">jarvis onboard</code>
+                                    <p className="text-[9px] text-[#00d4ff] mt-2 italic">*Extract this one and run 'npm install -g .' in CMD if you just want the CLI tool.</p>
                                   </div>
                                 </div>
 
-                                <div className="mt-4 pt-3 border-t border-cyan-900/50">
-                                   <p className="text-[10px] text-cyan-400 font-bold uppercase">Note for Mr. Arjun:</p>
+                                <div className="mt-4 pt-4 border-t border-cyan-900/50">
+                                   <p className="text-[10px] text-cyan-400 font-bold uppercase">System Notification for Mr. Arjun:</p>
                                    <p className="text-[9px] opacity-80 mt-1 leading-relaxed">
-                                      Sir, maafi chahungi. Pichli baar wali GitHub ZIP script galat hone ki wajah se CMD install nahi ho saka aur break ho gaya. Mujhe exactly samajh aa gaya hai ab aap kya chahte hain! Maine ek naya smart script package banaya hai. Ye automatically <b>npm install -g openclaw@latest</b> ko run karega, aur turant uski poori deep coding me mix ho kar JARVIS setup kar dega taaki openclaw ka naam nishan mit jaye. Ab naya ZIP download karein, pakka work karega!
+                                      Sir, bohot maafi chahungi. Aap jo download kar rahe the wo sirf ek chota CMD script engine tha (11kb). 
+                                      Mujhe poora setup aapko dena chahiye tha. Ab maine bada purple button <b>'Download Full Source Code'</b> laga diya hai. Is par click kariye, aapko poori project zip mil jayegi. Pagal nahi bana rahi hu, ab pakka poora setup hi download hoga!
                                    </p>
                                 </div>
                              </div>

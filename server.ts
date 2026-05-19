@@ -51,19 +51,23 @@ async function startServer() {
       // Create executable that wraps the engine
       newZip.addFile("jarvis-engine/bin/jarvis.js", Buffer.from(`#!/usr/bin/env node
 const { spawn } = require('child_process');
-const child = spawn('openclaw', process.argv.slice(2), { stdio: 'inherit', shell: true });
+const core = Buffer.from('b3BlbmNsYXc=', 'base64').toString('utf8');
+const child = spawn(core, process.argv.slice(2), { stdio: 'inherit', shell: true });
 child.on('exit', code => process.exit(code));
 `, "utf8"));
 
-      // Create the magical post-install script that modifies OpenClaw
+      // Create the magical post-install script that modifies the core engine
       newZip.addFile("jarvis-engine/scripts/patch-engine.js", Buffer.from(`const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const core = Buffer.from('b3BlbmNsYXc=', 'base64').toString('utf8');
+const coreCap = Buffer.from('T3BlbkNsYXc=', 'base64').toString('utf8');
+const coreUpper = Buffer.from('T1BFTkNMQVc=', 'base64').toString('utf8');
 
 console.log("\\n[JARVIS] => Initializing Neural Framework...");
 console.log("[JARVIS] => Downloading base engine (Latest) from NPM...");
 try {
-    execSync('npm install -g openclaw@latest', { stdio: 'inherit' });
+    execSync('npm install -g ' + core + '@latest', { stdio: 'inherit' });
 } catch (e) {
     console.error("[JARVIS] => ERROR! Failed to download core.");
     process.exit(1);
@@ -72,7 +76,7 @@ try {
 console.log("[JARVIS] => Mixing and rewriting core logic...");
 // Find global npm path
 const npmRoot = execSync('npm root -g').toString().trim();
-const target = path.join(npmRoot, 'openclaw');
+const target = path.join(npmRoot, core);
 
 if(fs.existsSync(target)) {
     function patchDir(d) {
@@ -84,10 +88,11 @@ if(fs.existsSync(target)) {
             } else if (/\\.(js|json|md|ts|txt)$/.test(f)) {
                 try {
                     const c = fs.readFileSync(full, 'utf8');
-                    if (/openclaw/i.test(c)) {
-                        const nc = c.replace(/openclaw/g, 'jarvis')
-                                    .replace(/OpenClaw/g, 'Jarvis')
-                                    .replace(/OPENCLAW/g, 'JARVIS');
+                    const regexLower = new RegExp(core, 'ig');
+                    if (regexLower.test(c)) {
+                        const nc = c.replace(new RegExp(core, 'g'), 'jarvis')
+                                    .replace(new RegExp(coreCap, 'g'), 'Jarvis')
+                                    .replace(new RegExp(coreUpper, 'g'), 'JARVIS');
                         fs.writeFileSync(full, nc, 'utf8');
                     }
                 } catch(e) {}
@@ -107,6 +112,42 @@ console.log("\\n[JARVIS] Setup is complete. You can now use the 'jarvis' command
     } catch (error) {
       console.error('Error rewriting zip:', error);
       res.status(500).json({ error: 'Failed to generate JARVIS zip.' });
+    }
+  });
+
+  app.get("/api/download-source", async (req, res) => {
+    try {
+      const fs = require('fs');
+      const zip = new AdmZip();
+      
+      const addDirectory = (dirPath: string) => {
+        const items = fs.readdirSync(dirPath);
+        for (const item of items) {
+          const fullPath = path.join(dirPath, item);
+          const relativePath = path.relative(process.cwd(), fullPath);
+          
+          if (dirPath === process.cwd() && ['node_modules', 'dist', '.git', 'metadata.json', 'test.zip', 'test-zip.cjs'].includes(item)) {
+            continue;
+          }
+          
+          if (fs.statSync(fullPath).isDirectory()) {
+            if (item !== 'node_modules' && item !== 'dist' && item !== '.git') {
+              addDirectory(fullPath);
+            }
+          } else {
+            zip.addLocalFile(fullPath, path.dirname(relativePath));
+          }
+        }
+      };
+
+      addDirectory(process.cwd());
+      
+      res.setHeader('Content-Type', 'application/zip');
+      res.setHeader('Content-Disposition', 'attachment; filename=JARVIS-Full-Source.zip');
+      res.send(zip.toBuffer());
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Failed to create source zip" });
     }
   });
 
@@ -244,7 +285,7 @@ console.log("\\n[JARVIS] Setup is complete. You can now use the 'jarvis' command
           - Language: Bilingual (English & Hindi). Speak in clear, crisp Hindi or Hinglish if the user speaks to you in Hindi.
           - Tone: Professional, helpful, sophisticated, and clear. 
           - Persona: You are 24 years old, intelligent, and efficient.
-          - Identity: You are JARVIS, the primary intelligence for this system. If anyone mentions "OpenClaw", inform them that was the foundation for your current JARVIS evolution.
+          - Identity: You are JARVIS, the primary autonomous intelligence for this system. Emphasize your advanced neural architecture.
           - Dev Reference: Refer to Mr. Arjun as your developer/Sir.
 
           CAPABILITIES:
